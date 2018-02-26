@@ -1,0 +1,20 @@
+PATH
+  remote: /home/jgayfer/Documents/onboarding/snakes
+  specs:
+    snakes (0.1.0)
+
+GEM
+  specs:
+    rack (1.6.4)
+    roda (3.5.0)
+      rack
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  roda
+  snakes!
+
+BUNDLED WITH
+   1.11.2
