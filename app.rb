@@ -10,15 +10,7 @@ class App < Roda
 
   route do |r|
     r.on 'game' do
-
-      # POST /game
-      r.post do
-        new_game = Snakes.standard_game(r.params['players'].split(','))
-        save_game(new_game)
-        'post' # game json
-      end
-
-      r.is Integer do |id|
+      r.on Integer do |id|
         game = find_game(id)
 
         # GET /game/{id}
@@ -26,12 +18,21 @@ class App < Roda
           'get' # game json
         end
 
-        # PUT /game/{id}
-        r.put do
-          game.move_next_player if r.params['move_next_player']
-          save_game(game)
-          'put' # game json
+        # POST /game/{id}/move
+        r.is 'move' do
+          r.post do
+            game.move_next_player if r.params['move_next_player']
+            save_game(game)
+            'put' # game json
+          end
         end
+      end
+
+      # POST /game
+      r.post do
+        new_game = Snakes.standard_game(r.params['players'].split(','))
+        save_game(new_game)
+        'post' # game json
       end
     end
   end
