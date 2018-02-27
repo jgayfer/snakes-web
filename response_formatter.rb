@@ -1,6 +1,8 @@
 require 'snakes'
 require 'json'
 
+# This class is responsible for forming the JSON responses that include game
+# info as well as a unique ID
 class ResponseFormatter
   class << self
     def format_game(game, id)
