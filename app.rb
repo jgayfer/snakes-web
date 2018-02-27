@@ -1,6 +1,7 @@
 require 'snakes'
 require 'roda'
 require 'pstore'
+require 'json'
 
 require_relative 'response_formatter'
 
@@ -33,7 +34,7 @@ class App < Roda
       # POST /game
       # Create a new game
       r.post do
-        new_game = Snakes.standard_game(r.params['players'].split(','))
+        new_game = Snakes.standard_game(JSON.parse(r.params['players']))
         id = rand(100000)
         save_game(new_game, id)
         ResponseFormatter.format_game(new_game, id)
