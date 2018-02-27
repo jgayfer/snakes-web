@@ -2,6 +2,8 @@ require 'snakes'
 require 'roda'
 require 'pstore'
 
+require_relative 'response_formatter'
+
 class App < Roda
   plugin :all_verbs
   plugin :error_handler do |e|
@@ -15,32 +17,34 @@ class App < Roda
 
         # GET /game/{id}
         r.get do
-          'get' # game json
+          ResponseFormatter.format_game(game, id)
         end
 
         # POST /game/{id}/move
         r.is 'move' do
           r.post do
-            game.move_next_player if r.params['move_next_player']
-            save_game(game)
-            'put' # game json
+            game.move_next_player
+            save_game(game, id)
+            ResponseFormatter.format_game(game, id)
           end
         end
       end
 
       # POST /game
+      # Create a new game
       r.post do
         new_game = Snakes.standard_game(r.params['players'].split(','))
-        save_game(new_game)
-        'post' # game json
+        id = rand(100000)
+        save_game(new_game, id)
+        ResponseFormatter.format_game(new_game, id)
       end
     end
   end
 
-  def save_game(game)
+  def save_game(game, id)
     store = db
     store.transaction do
-      store[game.object_id] = game
+      store[id] = game
       store.commit
     end
   end
