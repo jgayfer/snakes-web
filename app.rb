@@ -17,7 +17,7 @@ class App < Roda
 
   route do |r|
     r.on 'game' do
-      r.on Integer do |id|
+      r.on String do |id|
         game = find_game(id)
 
         # GET /game/{id}
