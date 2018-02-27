@@ -12,6 +12,8 @@ class App < Roda
   plugin :error_handler do |e|
     "Error: #{e.message}"
   end
+  plugin :default_headers,
+         'Access-Control-Allow-Origin' => '*'
 
   route do |r|
     r.on 'game' do
