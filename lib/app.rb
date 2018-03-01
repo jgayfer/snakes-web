@@ -40,7 +40,8 @@ class App < Roda
       # POST /game
       # Create a new game
       r.post do
-        new_game = Snakes.standard_game(JSON.parse(r.params['players']))
+        player_names = r.params['players'].split(',')
+        new_game = Snakes.standard_game(player_names)
         id = SecureRandom.uuid
         save_game(new_game, id)
         ResponseFormatter.format_game(new_game, id)
