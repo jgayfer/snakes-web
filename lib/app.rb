@@ -1,3 +1,5 @@
+require 'rubygems'
+require 'bundler/setup'
 require 'snakes'
 require 'roda'
 require 'pstore'

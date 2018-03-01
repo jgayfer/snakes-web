@@ -50,3 +50,4 @@ build-iPhoneSimulator/
 .rvmrc
 
 my_database.pstore
+coverage
