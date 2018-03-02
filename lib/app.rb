@@ -50,7 +50,7 @@ class App < Roda
   end
 
   def save_game(game, id)
-    store = db
+    store = opts[:db]
     store.transaction do
       store[id] = game
       store.commit
@@ -58,11 +58,7 @@ class App < Roda
   end
 
   def find_game(id)
-    store = db
+    store = opts[:db]
     store.transaction { store[id] }
-  end
-
-  def db
-    PStore.new('my_database.pstore')
   end
 end
