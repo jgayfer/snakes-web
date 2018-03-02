@@ -11,9 +11,6 @@ require_relative 'response_formatter'
 # Routing class for the snakes and ladders API
 class App < Roda
   plugin :all_verbs
-  plugin :error_handler do |e|
-    "Error: #{e.message}"
-  end
   plugin :default_headers,
          'Access-Control-Allow-Origin' => '*'
 
