@@ -1,9 +1,6 @@
-require 'rubygems'
 require 'bundler/setup'
 require 'snakes'
 require 'roda'
-require 'pstore'
-require 'json'
 require 'securerandom'
 
 require_relative 'response_formatter'
