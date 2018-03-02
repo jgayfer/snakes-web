@@ -1,5 +1,6 @@
 require 'snakes'
 
+# This class mocks a PStore database connection
 class MockStore
   def initialize; end
 
