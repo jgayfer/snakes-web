@@ -1,7 +1,7 @@
 require 'app'
 require 'json'
 
-require_relative 'mocks/mock_app'
+require_relative 'mocks/mock_store'
 
 describe 'Snakes API routes' do
   include Rack::Test::Methods
@@ -9,7 +9,8 @@ describe 'Snakes API routes' do
   let(:id) { 'fake-id' }
 
   def app
-    MockApp
+    App.opts[:db] = MockStore.new
+    App
   end
 
   it 'creates a new game' do
