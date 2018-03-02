@@ -9,8 +9,7 @@ describe 'Snakes API routes' do
   let(:id) { 'fake-id' }
 
   def app
-    App.opts[:db] = MockStore.new
-    App
+    App.tap { |app| app.opts[:db] = MockStore.new }
   end
 
   it 'creates a new game' do
