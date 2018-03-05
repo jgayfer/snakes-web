@@ -3,16 +3,19 @@ require 'server_game'
 
 # This class mocks a PStore database connection
 class MockStore
-  def initialize; end
+  def initialize(server_game)
+    @server_game = server_game
+  end
 
   def transaction
     yield
-    ServerGame.new(Snakes.standard_game(%w['shirt pants']), 'fake-id')
   end
 
   def []=(_, _); end
 
-  def [](_); end
+  def [](id)
+    @server_game if id == @server_game.id
+  end
 
   def commit; end
 end

@@ -9,6 +9,7 @@ require_relative 'server_game'
 # Routing class for the snakes and ladders API
 class App < Roda
   plugin :all_verbs
+  plugin :error_handler, &:message
   plugin :default_headers,
          'Access-Control-Allow-Origin' => '*'
 
@@ -16,6 +17,9 @@ class App < Roda
     r.on 'game' do
       r.on String do |id|
         server_game = find(id)
+
+        # Error checking
+        raise StandardError, 'Game not found' unless server_game
 
         # GET /game/{id}
         r.get do
