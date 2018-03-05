@@ -4,10 +4,10 @@ require 'json'
 # This class is responsible for forming the JSON responses
 class ResponseFormatter
   class << self
-    def format_game(game, id)
+    def format_game(server_game)
       response = {}
-      response['id'] = id
-      response['game'] = JSON.parse(game_json(game))
+      response['id'] = server_game.id
+      response['game'] = JSON.parse(game_json(server_game.game))
       JSON.generate(response)
     end
 

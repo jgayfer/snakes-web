@@ -1,4 +1,5 @@
 require 'snakes'
+require 'server_game'
 
 # This class mocks a PStore database connection
 class MockStore
@@ -6,7 +7,7 @@ class MockStore
 
   def transaction
     yield
-    Snakes.standard_game(%w['shirt pants'])
+    ServerGame.new(Snakes.standard_game(%w['shirt pants']), 'fake-id')
   end
 
   def []=(_, _); end

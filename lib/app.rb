@@ -4,6 +4,7 @@ require 'roda'
 require 'securerandom'
 
 require_relative 'response_formatter'
+require_relative 'server_game'
 
 # Routing class for the snakes and ladders API
 class App < Roda
@@ -14,19 +15,19 @@ class App < Roda
   route do |r|
     r.on 'game' do
       r.on String do |id|
-        game = find_game(id)
+        server_game = find(id)
 
         # GET /game/{id}
         r.get do
-          ResponseFormatter.format_game(game, id)
+          ResponseFormatter.format_game(server_game)
         end
 
         # POST /game/{id}/move
         r.is 'move' do
           r.post do
-            game.move_next_player
-            save_game(game, id)
-            ResponseFormatter.format_game(game, id)
+            server_game.game.move_next_player
+            save(server_game)
+            ResponseFormatter.format_game(server_game)
           end
         end
       end
@@ -34,24 +35,24 @@ class App < Roda
       # POST /game
       # Create a new game
       r.post do
-        player_names = r.params['players'].split(',')
-        new_game = Snakes.standard_game(player_names)
-        id = SecureRandom.uuid
-        save_game(new_game, id)
-        ResponseFormatter.format_game(new_game, id)
+        player_name = r.params['player']
+        game = Snakes.standard_game([player_name])
+        server_game = ServerGame.new(game, SecureRandom.uuid)
+        save(server_game)
+        ResponseFormatter.format_game(server_game)
       end
     end
   end
 
-  def save_game(game, id)
+  def save(server_game)
     store = opts[:db]
     store.transaction do
-      store[id] = game
+      store[server_game.id] = server_game
       store.commit
     end
   end
 
-  def find_game(id)
+  def find(id)
     store = opts[:db]
     store.transaction { store[id] }
   end
