@@ -9,7 +9,7 @@ describe 'Snakes API routes' do
 
   let(:game_id) { 'game-id' }
   let(:client_id) { 'client-id' }
-  let(:game) { Snakes.standard_game(['player1']) }
+  let(:game) { Snakes.standard_game(%w['player1 player2']) }
   let(:server_game) { ServerGame.new(game, game_id) }
   let(:client) { Client.new(Snakes::Player.new('player1'), client_id) }
   before { server_game.add_client(client) }
@@ -38,9 +38,9 @@ describe 'Snakes API routes' do
     expect(last_response.body).to eq('Game not found')
   end
 
-  it 'returns an error if no client id match' do
+  it 'returns an error if not part of game' do
     get "/game/#{game_id}/?client_id=fake"
-    expect(last_response.body).to eq('Not your turn!')
+    expect(last_response.body).to eq("You aren't part of this game")
   end
 
   it 'returns an error if no client id is given' do
