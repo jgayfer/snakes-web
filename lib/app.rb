@@ -20,6 +20,9 @@ class App < Roda
 
         # Error checking
         raise StandardError, 'Game not found' unless server_game
+        unless server_game.client_id_in_game?(r.params['client_id'])
+          raise StandardError, 'Invalid client id'
+        end
 
         # GET /game/{id}
         r.get do
