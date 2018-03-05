@@ -22,8 +22,9 @@ class App < Roda
 
         # Error checking
         raise StandardError, 'Game not found' unless server_game
+        raise StandardError, 'No client id provided' unless client_id
         unless server_game.client_id_in_game?(client_id)
-          raise StandardError, 'Invalid client id'
+          raise StandardError, 'Not your turn!'
         end
 
         # GET /game/{id}

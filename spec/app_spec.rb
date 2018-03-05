@@ -40,7 +40,12 @@ describe 'Snakes API routes' do
 
   it 'returns an error if no client id match' do
     get "/game/#{game_id}/?client_id=fake"
-    expect(last_response.body).to eq('Invalid client id')
+    expect(last_response.body).to eq('Not your turn!')
+  end
+
+  it 'returns an error if no client id is given' do
+    get "/game/#{game_id}"
+    expect(last_response.body).to eq('No client id provided')
   end
 
   it 'returns an error if no player is given' do
