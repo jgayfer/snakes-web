@@ -42,4 +42,9 @@ describe 'Snakes API routes' do
     get "/game/#{game_id}/?client_id=fake"
     expect(last_response.body).to eq('Invalid client id')
   end
+
+  it 'returns an error if no player is given' do
+    post '/game/'
+    expect(last_response.body).to eq('No player provided')
+  end
 end
