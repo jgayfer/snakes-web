@@ -23,12 +23,12 @@ class App < Roda
         client_id = r.params['client_id']
 
         # Error checking
-        raise StandardError, 'Game not found' unless server_game
+        game_not_found_response(r) unless server_game
 
         # POST /game/{id}/join
         r.on 'join' do
           r.post do
-            raise StandardError, 'No player provided' unless player_name
+            invalid_parameters_response(r) unless player_name
             player = Snakes::Player.new(player_name)
             client = Client.new(player, SecureRandom.uuid)
             server_game.add_client(client)
@@ -37,22 +37,22 @@ class App < Roda
           end
         end
 
-        # Error checking
-        raise StandardError, 'No client id provided' unless client_id
-        unless server_game.client_id_in_game?(client_id)
-          raise StandardError, "You aren't part of this game"
-        end
-
         # GET /game/{id}
         r.get do
           ResponseFormatter.format_game(server_game, client_id)
+        end
+
+        # Error checking
+        invalid_parameters_response(r) unless client_id
+        unless server_game.client_id_in_game?(client_id)
+          client_not_in_game_response(r)
         end
 
         # POST /game/{id}/move
         r.on 'move' do
           r.post do
             unless server_game.client_id_is_next_player?(client_id)
-              raise StandardError, "It's not your turn"
+              not_client_turn_response(r)
             end
             server_game.game.move_next_player
             save_server_game(server_game)
@@ -64,7 +64,7 @@ class App < Roda
       # POST /game
       # Create a new game
       r.post do
-        raise StandardError, 'No player provided' unless player_name
+        invalid_parameters_response(r) unless player_name
         client_id = SecureRandom.uuid
         server_game = server_game_factory(player_name, client_id)
         save_server_game(server_game)
@@ -74,6 +74,30 @@ class App < Roda
   end
 
   private
+
+  def game_not_found_response(r)
+    response.status = 404
+    response.write('Game not found')
+    r.halt
+  end
+
+  def invalid_parameters_response(r)
+    response.status = 422
+    response.write('Invalid parameters')
+    r.halt
+  end
+
+  def client_not_in_game_response(r)
+    response.status = 403
+    response.write('Given client is not part of this game')
+    r.halt
+  end
+
+  def not_client_turn_response(r)
+    response.status = 403
+    response.write("It's not your turn")
+    r.halt
+  end
 
   def save_server_game(server_game)
     store = opts[:db]
