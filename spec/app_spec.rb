@@ -31,6 +31,11 @@ describe 'Snakes API routes' do
     expect(last_response).to be_ok
   end
 
+  it 'joins an existing game' do
+    post "/game/#{game_id}/join/?player=someone"
+    expect(last_response).to be_ok
+  end
+
   it 'moves the next player in a game' do
     post "/game/#{game_id}/move/?client_id=#{client1_id}"
     expect(last_response).to be_ok

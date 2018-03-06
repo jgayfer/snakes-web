@@ -16,12 +16,28 @@ class App < Roda
 
   route do |r|
     r.on 'game' do
+      player_name = r.params['player']
+
       r.on String do |id|
         server_game = find_server_game(id)
         client_id = r.params['client_id']
 
         # Error checking
         raise StandardError, 'Game not found' unless server_game
+
+        # POST /game/{id}/join
+        r.on 'join' do
+          r.post do
+            raise StandardError, 'No player provided' unless player_name
+            player = Snakes::Player.new(player_name)
+            client = Client.new(player, SecureRandom.uuid)
+            server_game.add_client(client)
+            save_server_game(server_game)
+            ResponseFormatter.format_game(server_game, client.id)
+          end
+        end
+
+        # Error checking
         raise StandardError, 'No client id provided' unless client_id
         unless server_game.client_id_in_game?(client_id)
           raise StandardError, "You aren't part of this game"
@@ -48,9 +64,9 @@ class App < Roda
       # POST /game
       # Create a new game
       r.post do
-        raise StandardError, 'No player provided' unless r.params['player']
+        raise StandardError, 'No player provided' unless player_name
         client_id = SecureRandom.uuid
-        server_game = server_game_factory(r.params['player'], client_id)
+        server_game = server_game_factory(player_name, client_id)
         save_server_game(server_game)
         ResponseFormatter.format_game(server_game, client_id)
       end
