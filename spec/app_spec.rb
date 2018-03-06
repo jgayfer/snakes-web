@@ -8,11 +8,14 @@ describe 'Snakes API routes' do
   include Rack::Test::Methods
 
   let(:game_id) { 'game-id' }
-  let(:client_id) { 'client-id' }
-  let(:game) { Snakes.standard_game(%w['player1 player2']) }
+  let(:client1_id) { 'client1-id' }
+  let(:client2_id) { 'client2-id' }
+  let(:game) { Snakes.standard_game([]) }
   let(:server_game) { ServerGame.new(game, game_id) }
-  let(:client) { Client.new(Snakes::Player.new('player1'), client_id) }
-  before { server_game.add_client(client) }
+  let(:client1) { Client.new(Snakes::Player.new('player1'), client1_id) }
+  let(:client2) { Client.new(Snakes::Player.new('player2'), client2_id) }
+  before { server_game.add_client(client1) }
+  before { server_game.add_client(client2) }
 
   def app
     App.tap { |app| app.opts[:db] = MockStore.new(server_game) }
@@ -24,13 +27,19 @@ describe 'Snakes API routes' do
   end
 
   it 'retrieves an existing game' do
-    get "/game/#{game_id}/?client_id=#{client_id}"
+    get "/game/#{game_id}/?client_id=#{client1_id}"
     expect(last_response).to be_ok
   end
 
   it 'moves the next player in a game' do
-    post "/game/#{game_id}/move/?client_id=#{client_id}"
+    post "/game/#{game_id}/move/?client_id=#{client1_id}"
     expect(last_response).to be_ok
+  end
+
+  it "doesn't move player when not their turn" do
+    post "/game/#{game_id}/move/?client_id=#{client1_id}"
+    post "/game/#{game_id}/move/?client_id=#{client1_id}"
+    expect(last_response.body).to eq("It's not your turn")
   end
 
   it 'returns an error if no game exists' do

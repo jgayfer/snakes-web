@@ -35,6 +35,9 @@ class App < Roda
         # POST /game/{id}/move
         r.on 'move' do
           r.post do
+            unless server_game.client_id_is_next_player?(client_id)
+              raise StandardError, "It's not your turn"
+            end
             server_game.game.move_next_player
             save_server_game(server_game)
             ResponseFormatter.format_game(server_game, client_id)
