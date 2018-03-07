@@ -25,6 +25,11 @@ describe 'Snakes API routes' do
     it 'retrieves an existing game' do
       get "/game/#{game_id}/?client_id=#{client1_id}"
     end
+
+    it 'returns an error if no game exists' do
+      get '/game/fake-id'
+      expect(last_response.body).to eq('Game not found')
+    end
   end
 
   context 'POST /game' do
@@ -32,12 +37,27 @@ describe 'Snakes API routes' do
       post '/game/?player=name1'
       expect(last_response).to be_ok
     end
+
+    it 'returns an error if no player is given' do
+      post '/game/'
+      expect(last_response.body).to eq('Invalid parameters')
+    end
   end
 
   context 'POST /game/{id}/move' do
     it 'moves the next player in a game' do
       post "/game/#{game_id}/move/?client_id=#{client1_id}"
       expect(last_response).to be_ok
+    end
+
+    it 'returns an error if not part of game' do
+      post "/game/#{game_id}/move/?client_id=fake"
+      expect(last_response.body).to eq('Given client is not part of this game')
+    end
+
+    it 'returns an error if no client id is given' do
+      post "/game/#{game_id}/move"
+      expect(last_response.body).to eq('Invalid parameters')
     end
 
     it "doesn't move player when not their turn" do
@@ -52,25 +72,10 @@ describe 'Snakes API routes' do
       post "/game/#{game_id}/join/?player=someone"
       expect(last_response).to be_ok
     end
-  end
 
-  it 'returns an error if no game exists' do
-    get '/game/fake-id'
-    expect(last_response.body).to eq('Game not found')
-  end
-
-  it 'returns an error if not part of game' do
-    post "/game/#{game_id}/move/?client_id=fake"
-    expect(last_response.body).to eq('Given client is not part of this game')
-  end
-
-  it 'returns an error if no client id is given' do
-    post "/game/#{game_id}/move"
-    expect(last_response.body).to eq('Invalid parameters')
-  end
-
-  it 'returns an error if no player is given' do
-    post '/game/'
-    expect(last_response.body).to eq('Invalid parameters')
+    it 'returns an error if no player is given' do
+      post "/game/#{game_id}/join/"
+      expect(last_response.body).to eq('Invalid parameters')
+    end
   end
 end
