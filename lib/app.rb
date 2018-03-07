@@ -113,7 +113,7 @@ class App < Roda
   end
 
   def server_game_factory(player_name, client_id)
-    game = Snakes.standard_game([player_name])
+    game = Snakes.standard_game([])
     server_game = ServerGame.new(game, SecureRandom.uuid)
     client = Client.new(Snakes::Player.new(player_name), client_id)
     server_game.add_client(client)
