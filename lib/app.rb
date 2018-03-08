@@ -39,7 +39,7 @@ class App < Roda
 
         # GET /game/{id}
         r.get do
-          ResponseFormatter.format_game(server_game, client_id)
+          ResponseFormatter.format_game(server_game)
         end
 
         # Error checking

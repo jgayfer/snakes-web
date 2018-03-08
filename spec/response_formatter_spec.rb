@@ -9,13 +9,24 @@ RSpec.describe ResponseFormatter do
   let(:client_id) { 'client-id' }
 
   describe '.format_game' do
-    subject { JSON.parse(ResponseFormatter.format_game(server_game, client_id)) }
+    context 'client id is given' do
+      subject { JSON.parse(ResponseFormatter.format_game(server_game, client_id)) }
+      it 'has the correct keys' do
+        expect(subject).to have_key('game_id')
+        expect(subject).to have_key('game')
+        expect(subject).to have_key('client_id')
+        expect(subject).to have_key('game_has_started')
+      end
+    end
 
-    it 'has the correct keys' do
-      expect(subject).to have_key('game_id')
-      expect(subject).to have_key('game')
-      expect(subject).to have_key('client_id')
-      expect(subject).to have_key('game_has_started')
+    context 'client id is not given' do
+      subject { JSON.parse(ResponseFormatter.format_game(server_game)) }
+      it 'has the correct keys' do
+        expect(subject).to have_key('game_id')
+        expect(subject).to have_key('game')
+        expect(subject).not_to have_key('client_id')
+        expect(subject).to have_key('game_has_started')
+      end
     end
   end
 end
