@@ -24,6 +24,7 @@ describe 'Snakes API routes' do
   context 'GET /game/{id}' do
     it 'retrieves an existing game' do
       get "/game/#{game_id}/?client_id=#{client1_id}"
+      expect(last_response).to be_ok
     end
 
     it 'returns an error if no game exists' do
