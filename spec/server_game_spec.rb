@@ -51,4 +51,13 @@ RSpec.describe ServerGame do
       it { is_expected.to be_falsey }
     end
   end
+
+  describe '#start_game' do
+    subject { server_game.game_has_started }
+
+    it 'gets set to true' do
+      server_game.start_game
+      expect(subject).to be_truthy
+    end
+  end
 end
