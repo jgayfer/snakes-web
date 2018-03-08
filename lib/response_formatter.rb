@@ -9,6 +9,7 @@ class ResponseFormatter
       response['game_id'] = server_game.id
       response['client_id'] = client_id
       response['game'] = JSON.parse(game_json(server_game.game))
+      response['game_has_started'] = server_game.game_has_started
       JSON.generate(response)
     end
 

@@ -15,6 +15,7 @@ RSpec.describe ResponseFormatter do
       expect(subject).to have_key('game_id')
       expect(subject).to have_key('game')
       expect(subject).to have_key('client_id')
+      expect(subject).to have_key('game_has_started')
     end
   end
 end
