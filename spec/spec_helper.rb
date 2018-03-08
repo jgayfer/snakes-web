@@ -10,3 +10,11 @@ require 'rack/test'
 RSpec.configure do |conf|
   conf.include Rack::Test::Methods
 end
+
+def fixture(file)
+  File.read(fixture_path(file))
+end
+
+def fixture_path(file)
+  File.join(File.expand_path('../fixtures', __FILE__), file)
+end
