@@ -78,4 +78,16 @@ describe 'Snakes API routes' do
       expect(last_response.body).to eq('Invalid parameters')
     end
   end
+
+  context 'POST /game/{id}/start' do
+    it 'starts the game' do
+      post "/game/#{game_id}/start?client_id=#{client1_id}"
+      expect(last_response).to be_ok
+    end
+
+    it 'returns an error if no client id is given' do
+      post "/game/#{game_id}/start"
+      expect(last_response.body).to eq('Invalid parameters')
+    end
+  end
 end

@@ -59,6 +59,15 @@ class App < Roda
             ResponseFormatter.format_game(server_game, client_id)
           end
         end
+
+        # POST /game/{id}/start
+        r.on 'start' do
+          r.post do
+            server_game.start_game
+            save_server_game(server_game)
+            ResponseFormatter.format_game(server_game, client_id)
+          end
+        end
       end
 
       # POST /game
