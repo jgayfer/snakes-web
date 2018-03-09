@@ -1,4 +1,5 @@
 require_relative 'mocks/mock_store'
+require_relative 'mocks/mock_generate_id'
 
 describe 'Snakes API routes' do
   include Rack::Test::Methods
@@ -14,7 +15,11 @@ describe 'Snakes API routes' do
   before { server_game.add_client(client2) }
 
   def app
-    SnakesAPI::App.tap { |app| app.opts[:db] = MockStore.new(server_game) }
+    SnakesAPI::App.tap do |app|
+      app.opts[:db] = MockStore.new(server_game)
+      app.opts[:generate_game_id] = MockGenerateID.new(game_id)
+      app.opts[:generate_client_id] = MockGenerateID.new(client1_id)
+    end
   end
 
   context 'GET /game/{id}' do

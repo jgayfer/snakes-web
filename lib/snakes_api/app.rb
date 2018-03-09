@@ -6,6 +6,7 @@ require 'securerandom'
 require_relative 'response_formatter'
 require_relative 'server_game'
 require_relative 'client'
+require_relative 'factories/server_game_factory'
 
 module SnakesAPI
   # Routing class for the snakes and ladders API
@@ -30,11 +31,11 @@ module SnakesAPI
           r.on 'join' do
             r.post do
               invalid_parameters_response(r) unless player_name
-              player = Snakes::Player.new(player_name)
-              client = Client.new(player, SecureRandom.uuid)
+              client_id = opts[:generate_client_id].call
+              client = Client.new(Snakes::Player.new(player_name), client_id)
               server_game.add_client(client)
               save_server_game(server_game)
-              ResponseFormatter.format_game(server_game, client.id)
+              ResponseFormatter.format_game(server_game, client_id)
             end
           end
 
@@ -72,11 +73,12 @@ module SnakesAPI
         end
 
         # POST /game
-        # Create a new game
         r.post do
           invalid_parameters_response(r) unless player_name
-          client_id = SecureRandom.uuid
-          server_game = server_game_factory(player_name, client_id)
+          client_id = opts[:generate_client_id].call
+          game_id = opts[:generate_game_id].call
+          client = Client.new(Snakes::Player.new(player_name), client_id)
+          server_game = SnakesAPI::Factories::ServerGameFactory.one_player_game(client, game_id)
           save_server_game(server_game)
           ResponseFormatter.format_game(server_game, client_id)
         end
@@ -120,14 +122,6 @@ module SnakesAPI
     def find_server_game(id)
       store = opts[:db]
       store.transaction { store[id] }
-    end
-
-    def server_game_factory(player_name, client_id)
-      game = Snakes.standard_game([])
-      server_game = ServerGame.new(game, SecureRandom.uuid)
-      client = Client.new(Snakes::Player.new(player_name), client_id)
-      server_game.add_client(client)
-      server_game
     end
   end
 end
