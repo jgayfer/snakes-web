@@ -10,8 +10,8 @@ module SnakesAPI
       r.on 'game' do
         player_name = r.params['player']
 
-        r.on String do |id|
-          server_game = find_server_game(id)
+        r.on String do |game_id|
+          server_game = find_server_game(game_id)
           client_id = r.params['client_id']
 
           # Error checking
@@ -25,13 +25,13 @@ module SnakesAPI
               client = Client.new(Snakes::Player.new(player_name), client_id)
               server_game.add_client(client)
               save_server_game(server_game)
-              ResponseFormatter.format_game(server_game, client_id)
+              Responses::CredentialsResponse.new(game_id, client_id).to_s
             end
           end
 
           # GET /game/{id}
           r.get do
-            ResponseFormatter.format_game(server_game)
+            Responses::GameResponse.new(server_game).to_s
           end
 
           # Error checking
@@ -48,7 +48,7 @@ module SnakesAPI
               end
               server_game.game.move_next_player
               save_server_game(server_game)
-              ResponseFormatter.format_game(server_game, client_id)
+              '{}'
             end
           end
 
@@ -57,7 +57,7 @@ module SnakesAPI
             r.post do
               server_game.start_game
               save_server_game(server_game)
-              ResponseFormatter.format_game(server_game, client_id)
+              '{}'
             end
           end
         end
@@ -68,9 +68,9 @@ module SnakesAPI
           client_id = opts[:generate_client_id].call
           game_id = opts[:generate_game_id].call
           client = Client.new(Snakes::Player.new(player_name), client_id)
-          server_game = SnakesAPI::Factories::ServerGameFactory.one_player_game(client, game_id)
+          server_game = Factories::ServerGameFactory.one_player_game(client, game_id)
           save_server_game(server_game)
-          ResponseFormatter.format_game(server_game, client_id)
+          Responses::CredentialsResponse.new(game_id, client_id).to_s
         end
       end
     end
