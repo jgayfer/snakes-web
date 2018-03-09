@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rack-test'
+gem 'rake'
 gem 'roda'
 gem 'rspec'
 gem 'simplecov'

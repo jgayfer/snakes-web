@@ -1,6 +1,3 @@
-require 'snakes'
-require 'server_game'
-
 # This class mocks a PStore database connection
 class MockStore
   def initialize(server_game)

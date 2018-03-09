@@ -1,7 +1,3 @@
-require 'app'
-require 'server_game'
-require 'snakes'
-
 require_relative 'mocks/mock_store'
 
 describe 'Snakes API routes' do
@@ -11,14 +7,14 @@ describe 'Snakes API routes' do
   let(:client1_id) { 'client1-id' }
   let(:client2_id) { 'client2-id' }
   let(:game) { Snakes.standard_game([]) }
-  let(:server_game) { ServerGame.new(game, game_id) }
-  let(:client1) { Client.new(Snakes::Player.new('player1'), client1_id) }
-  let(:client2) { Client.new(Snakes::Player.new('player2'), client2_id) }
+  let(:server_game) { SnakesAPI::ServerGame.new(game, game_id) }
+  let(:client1) { SnakesAPI::Client.new(Snakes::Player.new('player1'), client1_id) }
+  let(:client2) { SnakesAPI::Client.new(Snakes::Player.new('player2'), client2_id) }
   before { server_game.add_client(client1) }
   before { server_game.add_client(client2) }
 
   def app
-    App.tap { |app| app.opts[:db] = MockStore.new(server_game) }
+    SnakesAPI::App.tap { |app| app.opts[:db] = MockStore.new(server_game) }
   end
 
   context 'GET /game/{id}' do

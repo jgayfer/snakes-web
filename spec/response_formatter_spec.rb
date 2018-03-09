@@ -1,16 +1,13 @@
-require 'response_formatter'
-require 'server_game'
-require 'snakes'
 require 'json'
 
-RSpec.describe ResponseFormatter do
+RSpec.describe SnakesAPI::ResponseFormatter do
   let(:game) { Snakes.standard_game(%w['pants shirt']) }
-  let(:server_game) { ServerGame.new(game, 'fake-id') }
+  let(:server_game) { SnakesAPI::ServerGame.new(game, 'fake-id') }
   let(:client_id) { 'client-id' }
 
   describe '.format_game' do
     context 'client id is given' do
-      subject { JSON.parse(ResponseFormatter.format_game(server_game, client_id)) }
+      subject { JSON.parse(SnakesAPI::ResponseFormatter.format_game(server_game, client_id)) }
       it 'has the correct keys' do
         expect(subject).to have_key('game_id')
         expect(subject).to have_key('game')
@@ -20,7 +17,7 @@ RSpec.describe ResponseFormatter do
     end
 
     context 'client id is not given' do
-      subject { JSON.parse(ResponseFormatter.format_game(server_game)) }
+      subject { JSON.parse(SnakesAPI::ResponseFormatter.format_game(server_game)) }
       it 'has the correct keys' do
         expect(subject).to have_key('game_id')
         expect(subject).to have_key('game')

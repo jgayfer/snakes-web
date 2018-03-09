@@ -1,17 +1,12 @@
-require 'server_game'
-require 'client'
-require 'snakes'
-require 'securerandom'
-
-RSpec.describe ServerGame do
+RSpec.describe SnakesAPI::ServerGame do
   let(:game) { Snakes.standard_game([]) }
-  let(:client) { Client.new(Snakes::Player.new('dummy'), '123abc') }
-  let(:client2) { Client.new(Snakes::Player.new('dummy2'), '123abc') }
-  let(:server_game) { ServerGame.new(game, '123abc') }
+  let(:client) { SnakesAPI::Client.new(Snakes::Player.new('dummy'), '123abc') }
+  let(:client2) { SnakesAPI::Client.new(Snakes::Player.new('dummy2'), '123abc') }
+  let(:server_game) { SnakesAPI::ServerGame.new(game, '123abc') }
 
   describe '#initialize' do
     subject { server_game }
-    it { is_expected.to be_a ServerGame }
+    it { is_expected.to be_a SnakesAPI::ServerGame }
   end
 
   describe '#add_client' do
@@ -19,7 +14,7 @@ RSpec.describe ServerGame do
     before { server_game.add_client(client) }
 
     it 'added a new client' do
-      expect(subject.clients.first).to be_a Client
+      expect(subject.clients.first).to be_a SnakesAPI::Client
       expect(subject.game.previous_player).to eq(client.player)
     end
   end
