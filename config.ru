@@ -1,3 +1,4 @@
+require 'bundler/setup'
 require 'pstore'
 require File.expand_path('../lib/snakes_api', __FILE__)
 

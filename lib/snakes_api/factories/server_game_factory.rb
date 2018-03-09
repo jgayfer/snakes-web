@@ -1,7 +1,3 @@
-require 'snakes'
-
-require_relative '../server_game'
-
 module SnakesAPI
   module Factories
     module ServerGameFactory

@@ -1,13 +1,3 @@
-require 'bundler/setup'
-require 'snakes'
-require 'roda'
-require 'securerandom'
-
-require_relative 'response_formatter'
-require_relative 'server_game'
-require_relative 'client'
-require_relative 'factories/server_game_factory'
-
 module SnakesAPI
   # Routing class for the snakes and ladders API
   class App < Roda

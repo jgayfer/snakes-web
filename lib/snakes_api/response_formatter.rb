@@ -1,6 +1,3 @@
-require 'snakes'
-require 'json'
-
 module SnakesAPI
   # This class is responsible for forming the JSON responses
   class ResponseFormatter
