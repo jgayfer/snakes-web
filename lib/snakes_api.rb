@@ -3,7 +3,6 @@ require 'roda'
 
 require_relative 'snakes_api/server_game'
 require_relative 'snakes_api/app'
-require_relative 'snakes_api/response_formatter'
 require_relative 'snakes_api/client'
 require_relative 'snakes_api/factories/server_game_factory'
 require_relative 'snakes_api/generate_id'
