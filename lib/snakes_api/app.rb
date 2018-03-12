@@ -21,6 +21,7 @@ module SnakesAPI
           r.on 'join' do
             r.post do
               invalid_parameters_response(r) unless player_name
+              game_started_response(r) if server_game.game_has_started
               client_id = opts[:generate_client_id].call
               client = Client.new(Snakes::Player.new(player_name), client_id)
               server_game.add_client(client)
@@ -98,6 +99,12 @@ module SnakesAPI
     def not_client_turn_response(r)
       response.status = 403
       response.write("It's not your turn")
+      r.halt
+    end
+
+    def game_started_response(r)
+      response.status = 403
+      response.write('That game has already started')
       r.halt
     end
 

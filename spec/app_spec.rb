@@ -87,6 +87,12 @@ describe 'Snakes API routes' do
       post "/game/#{game_id}/join/"
       expect(last_response.body).to eq('Invalid parameters')
     end
+
+    it 'returns an error if the game has started' do
+      post "/game/#{game_id}/start?client_id=#{client1_id}"
+      post "/game/#{game_id}/join/?player=someone"
+      expect(last_response.body).to eq('That game has already started')
+    end
   end
 
   context 'POST /game/{id}/start' do
