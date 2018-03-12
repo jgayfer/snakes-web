@@ -56,7 +56,7 @@ describe 'Snakes API routes' do
     it 'moves the next player in a game' do
       post "/game/#{game_id}/move/?client_id=#{client1_id}"
       expect(last_response).to be_ok
-      expect(last_response.body).to eq('{}')
+      expect(last_response.body).to eq(fixture('empty_response.json').chomp)
     end
 
     it 'returns an error if not part of game' do
@@ -93,7 +93,7 @@ describe 'Snakes API routes' do
     it 'starts the game' do
       post "/game/#{game_id}/start?client_id=#{client1_id}"
       expect(last_response).to be_ok
-      expect(last_response.body).to eq('{}')
+      expect(last_response.body).to eq(fixture('empty_response.json').chomp)
     end
 
     it 'returns an error if no client id is given' do

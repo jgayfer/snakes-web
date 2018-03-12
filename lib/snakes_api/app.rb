@@ -48,7 +48,7 @@ module SnakesAPI
               end
               server_game.game.move_next_player
               save_server_game(server_game)
-              '{}'
+              Responses::EmptyResponse.new.to_s
             end
           end
 
@@ -57,7 +57,7 @@ module SnakesAPI
             r.post do
               server_game.start_game
               save_server_game(server_game)
-              '{}'
+              Responses::EmptyResponse.new.to_s
             end
           end
         end
